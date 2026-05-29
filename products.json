@@ -1,7 +1,7 @@
 [
   {
     "id": "spoon_heavy",
-    "name": "重型茶匙",
+    "name": "5555不锈钢",
     "type": "茶匙",
     "sku": "CSIHWPPTEASPWH",
     "modelCode": "CSIHWPPTEASPWHRZ1",
@@ -57,6 +57,25 @@
       "单支重量": "约9g",
       "尺寸": "全长15cm",
       "包装": "1000个/箱"
+    }
+  },
+  {
+    "id": "888666_1780027685256",
+    "name": "测试第一条数据",
+    "type": "汤匙",
+    "sku": "888666",
+    "modelCode": "33333",
+    "color": "蓝色",
+    "material": "fdf",
+    "heavyweight": false,
+    "images": [
+      "https://img.wbmason.com/240/m_csihwppforkwh_cs_p.jpg?v=95199e2a-a4c1-43ff-aaca-db7a34b11b14"
+    ],
+    "features": ["haokan11"],
+    "specDetails": {
+      "22": "1222",
+      "333": "4444",
+      "555": "5555"
     }
   }
 ]
