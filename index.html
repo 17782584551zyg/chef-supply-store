@@ -1,392 +1,1571 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef's Supply | 商用餐具独立站</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Chef's Supply | Commercial Heavy-Duty Cutlery</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: #f8faf6; padding: 2rem 1rem; }
-        .app-container { max-width: 1400px; margin: 0 auto; }
-        .view.hidden { display: none; }
-        /* 以下样式与之前完全一致，为节省篇幅省略，实际使用时复制完整样式 */
-        .home-header { text-align: center; margin-bottom: 2rem; }
-        .home-header h1 { font-size: 2.4rem; color: #2c5e2a; }
-        .filters-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 2rem; background: #fff; padding: 0.8rem 1.5rem; border-radius: 60px; border: 1px solid #ece2d4; }
-        .filter-tabs { display: flex; gap: 0.6rem; }
-        .filter-btn { background: transparent; border: none; padding: 0.5rem 1.2rem; border-radius: 40px; font-weight: 500; cursor: pointer; }
-        .filter-btn.active { background: #2c5e2a; color: #fff; }
-        .search-box { background: #fefaf5; border-radius: 48px; border: 1px solid #e4dacb; padding: 0.3rem 0.6rem 0.3rem 1rem; }
-        .search-box input { border: none; background: transparent; padding: 0.5rem; width: 220px; outline: none; }
-        .product-grid-home { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 2rem; margin: 1.5rem 0; }
-        .product-card { background: #fff; border-radius: 28px; overflow: hidden; border: 1px solid #f0e8dd; transition: all .3s; cursor: pointer; }
-        .product-card:hover { transform: translateY(-8px); box-shadow: 0 25px 35px -12px rgba(0,0,0,.15); border-color: #c0a86a; }
-        .card-img { width: 100%; height: 210px; object-fit: cover; }
-        .card-info { padding: 1.2rem 1rem 1rem; }
-        .card-title { font-weight: 800; font-size: 1.25rem; }
-        .card-sku { font-size: .7rem; color: #9e8e6e; }
-        .card-type { display: inline-block; background: #f0efea; border-radius: 20px; padding: 0.2rem 0.7rem; font-size: .7rem; }
-        .card-buttons { display: flex; gap: 0.8rem; padding: 0.8rem 1rem 1.2rem; border-top: 1px solid #f0e8dd; }
-        .btn-card { flex: 1; text-align: center; padding: 0.5rem 0; border-radius: 40px; font-weight: 600; cursor: pointer; border: none; }
-        .btn-detail { background: #f5efe5; color: #5a4a2e; }
-        .btn-inquiry { background: #c0a86a; color: #fff; }
-        .detail-container { background: #fff; border-radius: 32px; padding: 2rem; }
-        .back-home-btn { background: none; border: none; color: #ab8e54; font-weight: 600; cursor: pointer; margin-bottom: 1.5rem; }
-        .product-grid-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; margin-bottom: 2rem; }
-        .main-image-card { background: #fefaf5; border-radius: 28px; border: 1px solid #f1efe7; aspect-ratio: 1; position: relative; display: flex; align-items: center; justify-content: center; }
-        .main-image-card img { width: 100%; height: 100%; object-fit: cover; }
-        .carousel-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; padding: 0 0.5rem; pointer-events: none; }
-        .nav-btn { background: rgba(255,255,255,.9); border-radius: 40px; width: 38px; height: 38px; display: flex; align-items: center; justify-content: center; cursor: pointer; pointer-events: auto; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
-        .thumbnail-strip { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
-        .thumb-item { width: 80px; height: 80px; border-radius: 16px; overflow: hidden; cursor: pointer; border: 2px solid transparent; }
-        .thumb-item.active { border-color: #c0a86a; }
-        .thumb-item img { width: 100%; height: 100%; object-fit: cover; }
-        .details-section { display: flex; flex-direction: column; gap: 1rem; }
-        .brand-badge { background: #fef4e6; color: #c0a86a; display: inline-block; padding: 0.2rem 0.8rem; border-radius: 40px; font-size: .8rem; }
-        .product-title { font-size: 1.8rem; font-weight: 700; }
-        .spec-list { border-top: 1px solid #ece7db; border-bottom: 1px solid #ece7db; padding: 1rem 0; display: flex; flex-direction: column; gap: 0.6rem; }
-        .spec-item { display: flex; font-size: .9rem; }
-        .spec-label { width: 100px; font-weight: 600; }
-        .contact-detail-btn { background: #c0a86a; color: #fff; border: none; padding: 0.8rem; border-radius: 48px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; }
-        .info-tabs { display: flex; gap: 2rem; border-bottom: 1px solid #e2dacf; margin: 1rem 0; }
-        .tab-btn { background: none; border: none; font-weight: 600; padding: 0.5rem 0; cursor: pointer; color: #6c7a66; }
-        .tab-btn.active { color: #2c5e2a; border-bottom: 2px solid #c0a86a; }
-        .tab-content { display: none; background: #fefcf8; padding: 1.2rem; border-radius: 24px; }
-        .tab-content.active { display: block; }
-        .desc-list { list-style: none; }
-        .desc-list li { display: flex; gap: 0.6rem; margin-bottom: 0.7rem; }
-        .spec-table { display: grid; grid-template-columns: 140px 1fr; gap: 0.8rem; }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center; z-index: 1000; }
-        .modal-content { background: #fff; border-radius: 32px; max-width: 400px; width: 90%; padding: 2rem; text-align: center; position: relative; }
-        .modal-close { position: absolute; top: 1rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; }
-        .contact-info-item { background: #f8f4ec; border-radius: 40px; padding: 0.8rem; margin: 1rem 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
-        .copy-btn { background: #e8dfd1; border: none; padding: 0.3rem 0.8rem; border-radius: 30px; cursor: pointer; }
-        .error-message { background: #ffeee8; border-left: 5px solid #d9534f; padding: 1rem; margin-bottom: 1.5rem; border-radius: 20px; color: #a94442; }
-        .no-results { grid-column: 1/-1; text-align: center; padding: 3rem; background: #fefcf8; border-radius: 40px; color: #aa9b7a; }
-        footer { text-align: center; margin-top: 2rem; font-size: .75rem; color: #b9aa87; }
-        @media (max-width:850px){ .product-grid-detail{grid-template-columns:1fr} .filters-bar{flex-direction:column;align-items:stretch} }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #f8faf6;
+        padding: 2rem 1rem;
+      }
+      .app-container {
+        max-width: 1400px;
+        margin: 0 auto;
+      }
+      .view.hidden {
+        display: none;
+      }
+
+      .trust-bar {
+        background: #fff;
+        border-radius: 60px;
+        padding: 0.5rem 1.2rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+        font-size: 0.75rem;
+        color: #4a6741;
+        border: 1px solid #e0d9cc;
+      }
+      .trust-bar i {
+        color: #c0a86a;
+        margin-right: 0.3rem;
+      }
+      .lang-bar {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1rem;
+      }
+      .lang-select {
+        padding: 0.4rem 0.8rem;
+        border-radius: 30px;
+        border: 1px solid #c0a86a;
+        background: white;
+        font-size: 0.8rem;
+        cursor: pointer;
+      }
+      .home-header {
+        text-align: center;
+        margin-bottom: 1rem;
+      }
+      .home-header h1 {
+        font-size: 2rem;
+        color: #2c5e2a;
+      }
+      .filters-bar {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        background: #fff;
+        padding: 0.6rem 1.2rem;
+        border-radius: 60px;
+        border: 1px solid #e0d9cc;
+      }
+      .filter-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+      }
+      .filter-btn {
+        background: transparent;
+        border: none;
+        padding: 0.4rem 1rem;
+        border-radius: 40px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: 0.2s;
+      }
+      .filter-btn.active {
+        background: #2c5e2a;
+        color: #fff;
+      }
+      .search-box {
+        background: #fefaf5;
+        border-radius: 48px;
+        border: 1px solid #e4dacb;
+        padding: 0.2rem 0.5rem;
+        display: flex;
+        align-items: center;
+      }
+      .search-box input {
+        border: none;
+        background: transparent;
+        padding: 0.4rem;
+        width: 200px;
+        outline: none;
+      }
+      .product-grid-home {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+        gap: 1.8rem;
+        margin: 1.5rem 0;
+      }
+      .product-card {
+        background: #fff;
+        border-radius: 24px;
+        overflow: hidden;
+        border: 1px solid #ece2d4;
+        transition: all 0.2s;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+      }
+      .product-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.05);
+        border-color: #c0a86a;
+      }
+      .card-img {
+        width: 100%;
+        height: 280px;
+        object-fit: cover;
+        background: transparent;
+      }
+      .card-info {
+        padding: 0.8rem 1rem 0.5rem;
+      }
+      .card-title {
+        font-weight: 700;
+        font-size: 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-bottom: 0.2rem;
+      }
+      .card-sku {
+        font-size: 0.7rem;
+        color: #9e8e6e;
+        font-family: monospace;
+      }
+      .card-type {
+        display: inline-block;
+        background: #f0efea;
+        border-radius: 20px;
+        padding: 0.2rem 0.7rem;
+        font-size: 0.7rem;
+        margin-top: 0.4rem;
+      }
+      .card-buttons {
+        display: flex;
+        gap: 0.6rem;
+        padding: 0.6rem 1rem 1rem;
+        border-top: 1px solid #f0e8dd;
+      }
+      .btn-card {
+        flex: 1;
+        text-align: center;
+        padding: 0.4rem 0;
+        border-radius: 40px;
+        font-weight: 500;
+        font-size: 0.8rem;
+        cursor: pointer;
+        border: none;
+      }
+      .btn-detail {
+        background: #f5efe5;
+        color: #5a4a2e;
+      }
+      .btn-inquiry {
+        background: #c0a86a;
+        color: #fff;
+      }
+      .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        margin: 2rem 0 1rem;
+        flex-wrap: wrap;
+      }
+      .page-btn {
+        background: white;
+        border: 1px solid #e0d9cc;
+        padding: 0.4rem 0.9rem;
+        border-radius: 30px;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .page-btn.active {
+        background: #2c5e2a;
+        color: white;
+        border-color: #2c5e2a;
+      }
+      .about-section,
+      .faq-section {
+        background: #fff;
+        border-radius: 28px;
+        border: 1px solid #ece2d4;
+        margin: 2rem 0;
+      }
+      .section-header {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid #ece2d4;
+      }
+      .section-header h2 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: #2c5e2a;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      .about-content {
+        padding: 1.2rem 1.5rem;
+        line-height: 1.5;
+      }
+      .trust-icons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+        margin-top: 1rem;
+      }
+      .trust-icons span {
+        background: #fefaf5;
+        padding: 0.2rem 0.7rem;
+        border-radius: 30px;
+        font-size: 0.7rem;
+      }
+      .faq-item {
+        border-bottom: 1px solid #f0e8dd;
+      }
+      .faq-question {
+        width: 100%;
+        background: #fff;
+        border: none;
+        text-align: left;
+        padding: 0.8rem 1.5rem;
+        font-weight: 500;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        font-size: 0.9rem;
+      }
+      .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        padding: 0 1.5rem;
+      }
+      .faq-answer.show {
+        max-height: 200px;
+        padding: 0 1.5rem 0.8rem 1.5rem;
+      }
+      .detail-container {
+        background: #fff;
+        border-radius: 32px;
+        padding: 1.5rem;
+      }
+      .back-home-btn {
+        background: none;
+        border: none;
+        color: #ab8e54;
+        font-weight: 500;
+        cursor: pointer;
+        margin-bottom: 1.2rem;
+        font-size: 0.85rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+      .product-grid-detail {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-bottom: 2rem;
+      }
+      .main-image-card {
+        background: transparent;
+        border: 1px solid #ece2d4;
+        border-radius: 24px;
+        aspect-ratio: 4/3;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .main-image-card img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        padding: 0.5rem;
+      }
+      .carousel-nav {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 0.5rem;
+        pointer-events: none;
+      }
+      .nav-btn {
+        background: rgba(255, 255, 255, 0.9);
+        width: 34px;
+        height: 34px;
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        pointer-events: auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        border: 1px solid #e0d9cc;
+      }
+      .thumbnail-strip {
+        display: flex;
+        gap: 0.6rem;
+        justify-content: center;
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+      .thumb-item {
+        width: 70px;
+        height: 70px;
+        border-radius: 14px;
+        overflow: hidden;
+        cursor: pointer;
+        border: 2px solid transparent;
+        background: transparent;
+      }
+      .thumb-item.active {
+        border-color: #c0a86a;
+      }
+      .thumb-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+      .details-section {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .product-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1.2;
+      }
+      .sku-highlight {
+        background: #f0efea;
+        padding: 0.2rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.8rem;
+        font-family: monospace;
+      }
+      .spec-list {
+        border-top: 1px solid #ece7db;
+        border-bottom: 1px solid #ece7db;
+        padding: 0.8rem 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+      .spec-item {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        font-size: 0.85rem;
+      }
+      .spec-item i {
+        width: 1.3rem;
+        color: #c0a86a;
+      }
+      .spec-label {
+        font-weight: 600;
+        min-width: 85px;
+      }
+      .contact-detail-btn {
+        background: #c0a86a;
+        color: #fff;
+        border: none;
+        padding: 0.7rem;
+        border-radius: 48px;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        width: 100%;
+        font-weight: 600;
+      }
+      .bottom-gallery-section {
+        margin-top: 2rem;
+        background: transparent;
+      }
+      .bottom-gallery-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-align: center;
+      }
+      .bottom-gallery-single {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .bottom-gallery-single img {
+        width: 100%;
+        height: auto;
+        display: block;
+        border-radius: 0;
+        background: transparent;
+        cursor: pointer;
+      }
+      .bottom-video-container {
+        margin-top: 2rem;
+      }
+      .bottom-video-title {
+        font-weight: 600;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+        text-align: center;
+      }
+      .bottom-video-wrapper video {
+        width: 100%;
+        max-width: 100%;
+        border-radius: 0;
+        background: #000;
+      }
+      .related-products {
+        margin-top: 2rem;
+        border-top: 1px solid #ece7db;
+        padding-top: 1.2rem;
+      }
+      .related-title {
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        font-size: 0.9rem;
+      }
+      .related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+        gap: 1rem;
+      }
+      .related-card {
+        background: #fefaf5;
+        border-radius: 18px;
+        padding: 0.5rem;
+        text-align: center;
+        cursor: pointer;
+        border: 1px solid #ece2d4;
+      }
+      .related-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: contain;
+      }
+      .related-card p {
+        font-size: 0.7rem;
+        margin-top: 0.3rem;
+        font-weight: 500;
+      }
+      .info-tabs {
+        display: flex;
+        gap: 1.5rem;
+        border-bottom: 1px solid #e2dacf;
+        margin: 1rem 0 0.8rem;
+      }
+      .tab-btn {
+        background: none;
+        border: none;
+        font-weight: 500;
+        padding: 0.4rem 0;
+        cursor: pointer;
+        color: #6c7a66;
+        font-size: 0.85rem;
+      }
+      .tab-btn.active {
+        color: #2c5e2a;
+        border-bottom: 2px solid #c0a86a;
+      }
+      .tab-content {
+        display: none;
+        background: #fefcf8;
+        padding: 1rem;
+        border-radius: 20px;
+      }
+      .tab-content.active {
+        display: block;
+      }
+      .desc-list {
+        list-style: none;
+      }
+      .desc-list li {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        font-size: 0.85rem;
+      }
+      .spec-table {
+        display: grid;
+        grid-template-columns: 120px 1fr;
+        gap: 0.6rem;
+        font-size: 0.85rem;
+      }
+      .fixed-contact {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1rem;
+        z-index: 1000;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+      }
+      .contact-fab {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: #25d366;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+        cursor: pointer;
+        transition: 0.2s;
+        text-decoration: none;
+      }
+      .contact-fab.email {
+        background: #3b3f45;
+      }
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        justify-content: center;
+        align-items: center;
+        z-index: 1100;
+      }
+      .modal-content {
+        background: #fff;
+        border-radius: 28px;
+        max-width: 480px;
+        width: 90%;
+        padding: 1.5rem;
+        position: relative;
+      }
+      .modal-close {
+        position: absolute;
+        top: 0.8rem;
+        right: 1.2rem;
+        font-size: 1.4rem;
+        cursor: pointer;
+      }
+      .form-group {
+        margin-bottom: 1rem;
+      }
+      .form-group input,
+      .form-group textarea {
+        width: 100%;
+        padding: 0.6rem;
+        border-radius: 30px;
+        border: 1px solid #ddd;
+        font-size: 0.85rem;
+      }
+      .submit-btn {
+        background: #2c5e2a;
+        color: white;
+        border: none;
+        padding: 0.6rem;
+        border-radius: 40px;
+        width: 100%;
+        cursor: pointer;
+      }
+      .subscription-form {
+        display: flex;
+        gap: 0.5rem;
+        margin: 0.8rem 0 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .subscription-form input {
+        flex: 1;
+        min-width: 150px;
+        padding: 0.5rem;
+        border-radius: 40px;
+        border: 1px solid #ddd;
+      }
+      .subscription-form button {
+        background: #c0a86a;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 40px;
+        cursor: pointer;
+        color: white;
+      }
+      footer {
+        text-align: center;
+        margin-top: 2rem;
+        font-size: 0.7rem;
+        color: #9b8c70;
+        padding: 0.8rem 0;
+        border-top: 1px solid #e0d9cc;
+      }
+      .image-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        justify-content: center;
+        align-items: center;
+        z-index: 1200;
+        cursor: pointer;
+      }
+      .image-modal img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+      }
+      @media (max-width: 800px) {
+        .product-grid-detail {
+          grid-template-columns: 1fr;
+        }
+        .filters-bar {
+          flex-direction: column;
+          align-items: stretch;
+        }
+        .card-img {
+          height: 220px;
+        }
+        .main-image-card {
+          aspect-ratio: 1/1;
+        }
+      }
     </style>
-</head>
-<body>
-<div class="app-container">
-    <!-- 主页 -->
-    <div id="homeView" class="view">
+  </head>
+  <body>
+    <div class="app-container">
+      <!-- 语言切换栏 - 默认选中英文 -->
+      <div class="lang-bar">
+        <select id="langSelect" class="lang-select">
+          <option value="zh">🇨🇳 简体中文</option>
+          <option value="en" selected>🇺🇸 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="ko">🇰🇷 한국어</option>
+          <option value="ja">🇯🇵 日本語</option>
+          <option value="id">🇮🇩 Indonesia</option>
+          <option value="ms">🇲🇾 Melayu</option>
+          <option value="kk">🇰🇿 Қазақша</option>
+        </select>
+      </div>
+
+      <!-- 信任标识条 -->
+      <div class="trust-bar">
+        <span
+          ><i class="fas fa-check-circle"></i>
+          <span data-i18n="trust_fda">FDA Certified</span></span
+        >
+        <span
+          ><i class="fas fa-leaf"></i>
+          <span data-i18n="trust_bpa">BPA Free</span></span
+        >
+        <span
+          ><i class="fas fa-truck"></i>
+          <span data-i18n="trust_ship">Fast Shipping</span></span
+        >
+        <span
+          ><i class="fas fa-headset"></i>
+          <span data-i18n="trust_support">24h Support</span></span
+        >
+        <span
+          ><i class="fas fa-dollar-sign"></i>
+          <span data-i18n="trust_wholesale">Wholesale</span></span
+        >
+      </div>
+
+      <!-- 主页视图 -->
+      <div id="homeView" class="view">
         <div class="home-header">
-            <h1><i class="fas fa-utensil-spoon"></i> Chef's Supply 专业重型餐具</h1>
-            <p>商用级聚丙烯 | 整箱批发 · 无需注册 · 直接询价</p>
+          <h1>
+            <i class="fas fa-utensil-spoon"></i>
+            <span data-i18n="site_title">Chef's Supply</span>
+          </h1>
+          <p data-i18n="site_subtitle">
+            Commercial Polypropylene Cutlery | Wholesale · No registration ·
+            Direct inquiry
+          </p>
         </div>
-        <div id="errorBanner" class="error-message" style="display:none;"></div>
+        <div
+          id="errorBanner"
+          style="
+            display: none;
+            background: #ffe6e6;
+            padding: 0.5rem;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+          "
+        ></div>
         <div class="filters-bar">
-            <div class="filter-tabs" id="filterTabs"></div>
-            <div class="search-box"><i class="fas fa-search"></i><input type="text" id="searchInput" placeholder="搜索产品名称或SKU..."></div>
+          <div class="filter-tabs" id="filterTabs"></div>
+          <div class="search-box">
+            <i class="fas fa-search"></i
+            ><input type="text" id="searchInput" placeholder="Search..." />
+          </div>
         </div>
-        <div id="productCardsContainer" class="product-grid-home"><div class="no-results">加载产品数据...</div></div>
-        <footer>© Chef's Supply — 专业餐饮器具供应商 | 数据完全由外部 products.json 提供</footer>
-    </div>
+        <div id="productCardsContainer" class="product-grid-home"></div>
+        <div id="paginationContainer" class="pagination"></div>
 
-    <!-- 详情页 -->
-    <div id="detailView" class="view hidden">
+        <div class="about-section">
+          <div class="section-header">
+            <h2>
+              <i class="fas fa-store"></i>
+              <span data-i18n="about_title">About Us</span>
+            </h2>
+          </div>
+          <div class="about-content">
+            <p data-i18n="about_text">
+              <strong>Chef's Supply</strong> specializes in commercial
+              heavy-duty polypropylene cutlery for restaurants, hotels, schools.
+              Food-grade PP, BPA-free, dishwasher safe. Small batch wholesale,
+              fast delivery to North America.
+            </p>
+            <div class="trust-icons">
+              <span><i class="fas fa-certificate"></i> FDA</span>
+              <span><i class="fas fa-recycle"></i> BPA Free</span>
+              <span><i class="fas fa-temperature-high"></i> 110°C</span>
+              <span><i class="fas fa-shipping-fast"></i> Fast Delivery</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-section">
+          <div class="section-header">
+            <h2>
+              <i class="fas fa-question-circle"></i>
+              <span data-i18n="faq_title">Frequently Asked Questions</span>
+            </h2>
+          </div>
+          <div class="faq-container">
+            <div class="faq-item">
+              <button class="faq-question">
+                ❓ <span data-i18n="faq1_q">MOQ?</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="faq-answer">
+                <p data-i18n="faq1_a">
+                  1 case (1000 pcs) MOQ, sample pack available.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question">
+                ❓ <span data-i18n="faq2_q">Sample policy?</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="faq-answer">
+                <p data-i18n="faq2_a">
+                  Free sample, you pay shipping (~$15-25).
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question">
+                ❓ <span data-i18n="faq3_q">Payment methods?</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="faq-answer">
+                <p data-i18n="faq3_a">
+                  PayPal, bank transfer, Wise, L/C for large orders.
+                </p>
+              </div>
+            </div>
+            <div class="faq-item">
+              <button class="faq-question">
+                ❓ <span data-i18n="faq4_q">Shipping to USA?</span>
+                <i class="fas fa-chevron-down"></i>
+              </button>
+              <div class="faq-answer">
+                <p data-i18n="faq4_a">Air 7-10 days, Sea 25-35 days.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <footer>
+          <form
+            id="subscriptionForm"
+            class="subscription-form"
+            action="https://formspree.io/f/xojbrzpz"
+            method="POST"
+          >
+            <input
+              type="email"
+              name="email"
+              placeholder="Email for updates & deals"
+              required
+            />
+            <button type="submit">
+              <i class="fas fa-paper-plane"></i>
+              <span data-i18n="subscribe_btn">Subscribe</span>
+            </button>
+          </form>
+          <p>
+            © Chef's Supply —
+            <span data-i18n="footer_data">Data provided by products.json</span>
+          </p>
+        </footer>
+      </div>
+
+      <!-- 详情视图 -->
+      <div id="detailView" class="view hidden">
         <div class="detail-container">
-            <button id="backHomeBtn" class="back-home-btn"><i class="fas fa-arrow-left"></i> 返回所有产品</button>
-            <div class="product-grid-detail">
-                <div class="gallery-section">
-                    <div class="main-image-card" style="position: relative;">
-                        <div class="carousel-nav">
-                            <div class="nav-btn" id="detailPrev"><i class="fas fa-chevron-left"></i></div>
-                            <div class="nav-btn" id="detailNext"><i class="fas fa-chevron-right"></i></div>
-                        </div>
-                        <img id="mainCarouselImg" src="" alt="产品主图">
-                    </div>
-                    <div class="thumbnail-strip" id="detailThumbContainer"></div>
+          <button id="backHomeBtn" class="back-home-btn">
+            <i class="fas fa-arrow-left"></i>
+            <span data-i18n="back_btn">Back to all products</span>
+          </button>
+          <div class="product-grid-detail">
+            <div class="gallery-section">
+              <div class="main-image-card" id="mainImageCard">
+                <div class="carousel-nav">
+                  <div class="nav-btn" id="detailPrev">
+                    <i class="fas fa-chevron-left"></i>
+                  </div>
+                  <div class="nav-btn" id="detailNext">
+                    <i class="fas fa-chevron-right"></i>
+                  </div>
                 </div>
-                <div class="details-section">
-                    <div><span class="brand-badge"><i class="fas fa-store"></i> Chef's Supply</span></div>
-                    <h1 class="product-title" id="detailProductName"></h1>
-                    <div><span class="sku-highlight" id="detailSku"></span></div>
-                    <div class="spec-list" id="detailSpecList"></div>
-                    <button id="detailInquiryBtn" class="contact-detail-btn"><i class="fas fa-envelope"></i> 获取报价及联系方式</button>
-                </div>
+                <img id="mainCarouselImg" src="" alt="Product main image" />
+              </div>
+              <div class="thumbnail-strip" id="detailThumbContainer"></div>
             </div>
-            <div class="product-info-bottom">
-                <div class="info-tabs">
-                    <button class="tab-btn active" data-tab="desc">📄 关于此商品</button>
-                    <button class="tab-btn" data-tab="details">🔧 产品规格详情</button>
-                </div>
-                <div id="detailDescTab" class="tab-content active"><ul id="detailDescList" class="desc-list"></ul></div>
-                <div id="detailDetailsTab" class="tab-content"><div id="detailSpecTable" class="spec-table"></div></div>
+            <div class="details-section">
+              <div>
+                <span
+                  style="
+                    background: #fef4e6;
+                    padding: 0.2rem 0.8rem;
+                    border-radius: 30px;
+                    font-size: 0.75rem;
+                  "
+                  ><i class="fas fa-store"></i> Chef's Supply</span
+                >
+              </div>
+              <h1 class="product-title" id="detailProductName"></h1>
+              <div><span class="sku-highlight" id="detailSku"></span></div>
+              <div class="spec-list" id="detailSpecList"></div>
+              <button id="detailInquiryBtn" class="contact-detail-btn">
+                <i class="fas fa-envelope"></i>
+                <span data-i18n="get_quote_btn">Get Quote</span>
+              </button>
             </div>
+          </div>
+
+          <div id="relatedProducts" class="related-products"></div>
+          <div class="info-tabs">
+            <button class="tab-btn active" data-tab="desc">
+              <span data-i18n="tab_desc">About this item</span>
+            </button>
+            <button class="tab-btn" data-tab="details">
+              <span data-i18n="tab_specs">Specifications</span>
+            </button>
+          </div>
+          <div id="detailDescTab" class="tab-content active">
+            <ul id="detailDescList" class="desc-list"></ul>
+          </div>
+          <div id="detailDetailsTab" class="tab-content">
+            <div id="detailSpecTable" class="spec-table"></div>
+          </div>
         </div>
+
+        <!-- 底部详细图（全宽单列） -->
+        <div
+          id="bottomGallerySection"
+          class="bottom-gallery-section"
+          style="display: none"
+        >
+          <div class="bottom-gallery-title">
+            <i class="fas fa-images"></i>
+            <span data-i18n="detail_gallery_title">Product Details</span>
+          </div>
+          <div id="bottomGalleryList" class="bottom-gallery-single"></div>
+        </div>
+
+        <!-- 视频区域 -->
+        <div
+          id="bottomVideoContainer"
+          class="bottom-video-container"
+          style="display: none"
+        >
+          <div class="bottom-video-title">
+            <i class="fas fa-video"></i>
+            <span data-i18n="video_title">Product Video</span>
+          </div>
+          <div id="bottomVideoWrapper" class="bottom-video-wrapper"></div>
+        </div>
+      </div>
+
+      <!-- 询价模态框 -->
+      <div id="inquiryModal" class="modal">
+        <div class="modal-content">
+          <span class="modal-close">&times;</span>
+          <h3 data-i18n="modal_title">Request a Quote</h3>
+          <form
+            id="quoteForm"
+            action="https://formspree.io/f/maqkvzpd"
+            method="POST"
+          >
+            <div class="form-group">
+              <input type="text" name="name" placeholder="Your name" required />
+            </div>
+            <div class="form-group">
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="text"
+                name="sku"
+                id="quoteSku"
+                placeholder="SKU (e.g. Teaspoon_001)"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <input
+                type="number"
+                name="quantity"
+                placeholder="Quantity (cases)"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <textarea
+                name="message"
+                rows="2"
+                placeholder="Message"
+              ></textarea>
+            </div>
+            <button type="submit" class="submit-btn" data-i18n="send_btn">
+              Send Inquiry
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- 大图预览模态框 -->
+      <div id="imagePreviewModal" class="image-modal">
+        <img id="previewImage" src="" alt="Preview" />
+      </div>
+
+      <!-- 固定联系方式悬浮球 -->
+      <div class="fixed-contact">
+        <a
+          href="https://wa.me/8617793529591"
+          class="contact-fab"
+          target="_blank"
+          ><i class="fab fa-whatsapp"></i
+        ></a>
+        <div class="contact-fab email" id="emailFab">
+          <i class="far fa-envelope"></i>
+        </div>
+      </div>
     </div>
-</div>
 
-<!-- 询价弹窗 -->
-<div id="inquiryModal" class="modal">
-    <div class="modal-content">
-        <span class="modal-close">&times;</span>
-        <div class="modal-icon"><i class="fas fa-headset"></i></div>
-        <h3>联系销售团队</h3>
-        <p>点击下方按钮复制联系方式</p>
-        <div id="modalContactInfo"></div>
-    </div>
-</div>
+    <script>
+      // ========== 多语言字典（英文为默认） ==========
+      const translations = {
+        zh: {
+          site_title: "Chef's Supply",
+          site_subtitle: "商用聚丙烯餐具 | 整箱批发 · 无需注册 · 直接询价",
+          trust_fda: "FDA认证",
+          trust_bpa: "不含BPA",
+          trust_ship: "快速发货",
+          trust_support: "24h客服",
+          trust_wholesale: "批发价",
+          about_title: "关于我们",
+          about_text:
+            "<strong>Chef's Supply</strong> 专注于商用重型聚丙烯餐具，为餐厅、酒店、学校提供高品质茶匙、餐叉、餐刀等。食品级PP，不含BPA，洗碗机安全。支持小批量，快速交货至北美。",
+          faq_title: "常见问题",
+          faq1_q: "最小起订量?",
+          faq1_a: "1箱（1000件）起订，可提供样品包。",
+          faq2_q: "样品政策?",
+          faq2_a: "免费样品，仅付国际运费（约$15-25）。",
+          faq3_q: "支付方式?",
+          faq3_a: "PayPal, 银行转账, Wise, 信用证（大额）。",
+          faq4_q: "发货到美国时效?",
+          faq4_a: "空运7-10天，海运25-35天。",
+          subscribe_btn: "订阅",
+          footer_data: "数据由 products.json 提供",
+          back_btn: "返回所有产品",
+          get_quote_btn: "获取报价",
+          tab_desc: "关于此商品",
+          tab_specs: "详细规格",
+          modal_title: "获取报价",
+          send_btn: "发送询盘",
+          detail_btn: "查看详情",
+          inquiry_btn: "询价",
+          search_placeholder: "搜索...",
+          all_btn: "全部",
+          detail_gallery_title: "产品详细图",
+          related_title: "相关产品推荐",
+          video_title: "产品视频",
+        },
+        en: {
+          site_title: "Chef's Supply",
+          site_subtitle:
+            "Commercial Polypropylene Cutlery | Wholesale · No registration · Direct inquiry",
+          trust_fda: "FDA Certified",
+          trust_bpa: "BPA Free",
+          trust_ship: "Fast Shipping",
+          trust_support: "24h Support",
+          trust_wholesale: "Wholesale",
+          about_title: "About Us",
+          about_text:
+            "<strong>Chef's Supply</strong> specializes in commercial heavy-duty polypropylene cutlery for restaurants, hotels, schools. Food-grade PP, BPA-free, dishwasher safe. Small batch wholesale, fast delivery to North America.",
+          faq_title: "Frequently Asked Questions",
+          faq1_q: "MOQ?",
+          faq1_a: "1 case (1000 pcs) MOQ, sample pack available.",
+          faq2_q: "Sample policy?",
+          faq2_a: "Free sample, you pay shipping (~$15-25).",
+          faq3_q: "Payment methods?",
+          faq3_a: "PayPal, bank transfer, Wise, L/C for large orders.",
+          faq4_q: "Shipping to USA?",
+          faq4_a: "Air 7-10 days, Sea 25-35 days.",
+          subscribe_btn: "Subscribe",
+          footer_data: "Data from products.json",
+          back_btn: "Back to all products",
+          get_quote_btn: "Get Quote",
+          tab_desc: "About this item",
+          tab_specs: "Specifications",
+          modal_title: "Request a Quote",
+          send_btn: "Send Inquiry",
+          detail_btn: "View Details",
+          inquiry_btn: "Inquiry",
+          search_placeholder: "Search...",
+          all_btn: "All",
+          detail_gallery_title: "Product Details",
+          related_title: "Related Products",
+          video_title: "Product Video",
+        },
+      };
+      // 其他语言简单复制英文
+      for (let lang of ["de", "ko", "ja", "id", "ms", "kk"]) {
+        if (!translations[lang])
+          translations[lang] = Object.assign({}, translations.en);
+      }
 
-<script>
-    // 联系方式（可根据需要修改）
-    const CONTACT_INFO = { whatsapp: "+1 415 555 1234", email: "sales@chefs-supply.com" };
+      let currentLang = "en"; // 默认英文
+      let PRODUCTS_DATA = [];
+      let currentProduct = null;
+      let currentCarouselIndex = 0;
+      let currentCategory = "all";
+      let searchKeyword = "";
+      let currentPage = 1;
+      const itemsPerPage = 9;
 
-    // 全局变量
-    let PRODUCTS_DATA = [];
-    let currentProduct = null;
-    let currentCarouselIndex = 0;
-    let currentCategory = "all";
-    let searchKeyword = "";
+      const CONTACT = {
+        whatsapp: "8617793529591",
+        email: "shanghaihaitaojie@icloud.com",
+      };
 
-    // DOM 元素
-    const homeView = document.getElementById('homeView');
-    const detailView = document.getElementById('detailView');
-    const productContainer = document.getElementById('productCardsContainer');
-    const backHomeBtn = document.getElementById('backHomeBtn');
-    const searchInput = document.getElementById('searchInput');
-    const filterTabsDiv = document.getElementById('filterTabs');
-    const errorBanner = document.getElementById('errorBanner');
+      // DOM 元素
+      const homeView = document.getElementById("homeView");
+      const detailView = document.getElementById("detailView");
+      const productContainer = document.getElementById("productCardsContainer");
+      const filterTabsDiv = document.getElementById("filterTabs");
+      const searchInput = document.getElementById("searchInput");
+      const backHomeBtn = document.getElementById("backHomeBtn");
+      const mainCarouselImg = document.getElementById("mainCarouselImg");
+      const detailThumbContainer = document.getElementById(
+        "detailThumbContainer",
+      );
+      const detailProductName = document.getElementById("detailProductName");
+      const detailSku = document.getElementById("detailSku");
+      const detailSpecList = document.getElementById("detailSpecList");
+      const detailDescList = document.getElementById("detailDescList");
+      const detailSpecTable = document.getElementById("detailSpecTable");
+      const detailInquiryBtn = document.getElementById("detailInquiryBtn");
+      const prevBtn = document.getElementById("detailPrev");
+      const nextBtn = document.getElementById("detailNext");
+      const relatedDiv = document.getElementById("relatedProducts");
+      const bottomGallerySection = document.getElementById(
+        "bottomGallerySection",
+      );
+      const bottomGalleryList = document.getElementById("bottomGalleryList");
+      const bottomVideoContainer = document.getElementById(
+        "bottomVideoContainer",
+      );
+      const bottomVideoWrapper = document.getElementById("bottomVideoWrapper");
+      const modal = document.getElementById("inquiryModal");
+      const quoteSku = document.getElementById("quoteSku");
+      const modalClose = document.querySelector("#inquiryModal .modal-close");
+      const emailFab = document.getElementById("emailFab");
+      const langSelect = document.getElementById("langSelect");
+      const paginationContainer = document.getElementById(
+        "paginationContainer",
+      );
+      const imagePreviewModal = document.getElementById("imagePreviewModal");
+      const previewImage = document.getElementById("previewImage");
 
-    const modal = document.getElementById('inquiryModal');
-    const modalContactInfo = document.getElementById('modalContactInfo');
-    const modalClose = document.querySelector('.modal-close');
+      function updateLanguageUI() {
+        const t = translations[currentLang];
+        if (!t) return;
+        document.querySelectorAll("[data-i18n]").forEach((el) => {
+          const key = el.getAttribute("data-i18n");
+          if (t[key]) {
+            if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+              el.placeholder = t[key];
+            } else {
+              el.innerHTML = t[key];
+            }
+          }
+        });
+        if (searchInput)
+          searchInput.placeholder = t.search_placeholder || "Search...";
+        document
+          .querySelectorAll(".btn-detail")
+          .forEach((btn) => (btn.innerText = t.detail_btn || "View Details"));
+        document
+          .querySelectorAll(".btn-inquiry")
+          .forEach((btn) => (btn.innerText = t.inquiry_btn || "Inquiry"));
+        if (detailInquiryBtn)
+          detailInquiryBtn.querySelector("span") &&
+            (detailInquiryBtn.querySelector("span").innerText =
+              t.get_quote_btn);
+        rebuildFilterButtons();
+        if (!homeView.classList.contains("hidden") && currentProduct) {
+          renderRelated(currentProduct);
+          renderBottomGallery(currentProduct);
+          renderBottomVideo(currentProduct);
+        }
+      }
 
-    const mainCarouselImg = document.getElementById('mainCarouselImg');
-    const detailThumbContainer = document.getElementById('detailThumbContainer');
-    const detailProductName = document.getElementById('detailProductName');
-    const detailSku = document.getElementById('detailSku');
-    const detailSpecList = document.getElementById('detailSpecList');
-    const detailDescList = document.getElementById('detailDescList');
-    const detailSpecTable = document.getElementById('detailSpecTable');
-    const detailInquiryBtn = document.getElementById('detailInquiryBtn');
-    const prevBtn = document.getElementById('detailPrev');
-    const nextBtn = document.getElementById('detailNext');
+      function rebuildFilterButtons() {
+        const t = translations[currentLang];
+        const btns = document.querySelectorAll(".filter-btn");
+        btns.forEach((btn) => {
+          const cat = btn.getAttribute("data-category");
+          if (cat === "all") btn.innerHTML = t.all_btn || "All";
+        });
+      }
 
-    // 加载外部 JSON（无后备数据，失败则显示错误）
-    async function loadData() {
+      async function setLanguage(lang) {
+        currentLang = lang;
+        updateLanguageUI();
+        if (PRODUCTS_DATA.length) {
+          currentPage = 1;
+          renderHome();
+          if (!homeView.classList.contains("hidden") && currentProduct) {
+            updateDetailUI();
+            renderRelated(currentProduct);
+            renderBottomGallery(currentProduct);
+            renderBottomVideo(currentProduct);
+          }
+        }
+      }
+
+      async function loadData() {
         try {
-            const response = await fetch('./products.json');
-            if (!response.ok) throw new Error(`HTTP ${response.status}: 无法加载 products.json`);
-            PRODUCTS_DATA = await response.json();
-            if (!Array.isArray(PRODUCTS_DATA) || PRODUCTS_DATA.length === 0) {
-                throw new Error('products.json 格式错误或为空数组');
-            }
-            errorBanner.style.display = 'none';
-            buildFilterTabs();
+          const res = await fetch("./products.json");
+          if (!res.ok) throw new Error();
+          PRODUCTS_DATA = await res.json();
+          if (!Array.isArray(PRODUCTS_DATA)) throw new Error();
+          document.getElementById("errorBanner").style.display = "none";
+          buildFilterTabs();
+          renderHome();
+          initFaq();
+          window.addEventListener("hashchange", handleHash);
+          handleHash();
+        } catch (e) {
+          document.getElementById("errorBanner").innerHTML =
+            "⚠️ Cannot load products.json, please check file exists";
+          document.getElementById("errorBanner").style.display = "block";
+          productContainer.innerHTML =
+            '<div style="text-align:center; padding:2rem;">Failed to load data</div>';
+        }
+      }
+
+      function buildFilterTabs() {
+        const types = [...new Set(PRODUCTS_DATA.map((p) => p.type))];
+        const allText = translations[currentLang]?.all_btn || "All";
+        filterTabsDiv.innerHTML =
+          `<button class="filter-btn active" data-category="all">${allText}</button>` +
+          types
+            .map(
+              (t) =>
+                `<button class="filter-btn" data-category="${t}">${t}</button>`,
+            )
+            .join("");
+        document.querySelectorAll(".filter-btn").forEach((btn) =>
+          btn.addEventListener("click", () => {
+            document
+              .querySelectorAll(".filter-btn")
+              .forEach((b) => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentCategory = btn.getAttribute("data-category");
+            currentPage = 1;
             renderHome();
-        } catch (err) {
-            console.error(err);
-            errorBanner.innerHTML = `<i class="fas fa-exclamation-triangle"></i> 加载失败：${err.message}<br>
-            请确保：<br>
-            1. 当前页面通过 <strong>HTTP 服务器</strong> 访问（不能直接双击打开 HTML 文件）<br>
-            2. <strong>products.json</strong> 文件与此 HTML 在同一目录下<br>
-            3. 使用命令启动本地服务器：<br>
-            &nbsp;&nbsp;• Python: <code>python -m http.server 8080</code> 然后访问 <code>http://localhost:8080</code><br>
-            &nbsp;&nbsp;• Node.js: <code>npx http-server</code><br>
-            &nbsp;&nbsp;• VS Code: 安装 Live Server 插件`;
-            errorBanner.style.display = 'block';
-            productContainer.innerHTML = '<div class="no-results"><i class="fas fa-database"></i> 数据加载失败，请检查上方提示</div>';
-        }
-    }
+          }),
+        );
+      }
 
-    function buildFilterTabs() {
-        const types = [...new Set(PRODUCTS_DATA.map(p => p.type))];
-        filterTabsDiv.innerHTML = `<button class="filter-btn active" data-category="all">全部</button>` +
-            types.map(t => `<button class="filter-btn" data-category="${t}">${t}</button>`).join('');
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                currentCategory = btn.getAttribute('data-category');
-                renderHome();
-            });
+      function getFilteredProducts() {
+        return PRODUCTS_DATA.filter((p) => {
+          if (currentCategory !== "all" && p.type !== currentCategory)
+            return false;
+          if (searchKeyword.trim()) {
+            const kw = searchKeyword.toLowerCase();
+            return (
+              p.name.toLowerCase().includes(kw) ||
+              p.sku.toLowerCase().includes(kw)
+            );
+          }
+          return true;
         });
-    }
+      }
 
-    function getFilteredProducts() {
-        return PRODUCTS_DATA.filter(p => {
-            if (currentCategory !== "all" && p.type !== currentCategory) return false;
-            if (searchKeyword.trim()) {
-                const kw = searchKeyword.toLowerCase();
-                return p.name.toLowerCase().includes(kw) || p.sku.toLowerCase().includes(kw);
-            }
-            return true;
-        });
-    }
-
-    function renderHome() {
+      function renderHome() {
         const filtered = getFilteredProducts();
-        if (filtered.length === 0) {
-            productContainer.innerHTML = `<div class="no-results"><i class="fas fa-search"></i> 没有找到相关产品</div>`;
-            return;
+        const totalPages = Math.ceil(filtered.length / itemsPerPage);
+        if (currentPage > totalPages) currentPage = totalPages || 1;
+        const start = (currentPage - 1) * itemsPerPage;
+        const pageItems = filtered.slice(start, start + itemsPerPage);
+        if (!pageItems.length) {
+          productContainer.innerHTML =
+            '<div style="text-align:center; padding:2rem;">No products found</div>';
+          paginationContainer.innerHTML = "";
+          return;
         }
-        productContainer.innerHTML = filtered.map(p => `
+        const t = translations[currentLang];
+        productContainer.innerHTML = pageItems
+          .map(
+            (p) => `
             <div class="product-card" data-id="${p.id}">
-                <img class="card-img" src="${p.images[0]}" onerror="this.src='https://placehold.co/600x400?text=Image+Error'">
+                <img class="card-img" src="${p.images[0]}" loading="lazy" onerror="this.src='https://placehold.co/600x400?text=No+Image'">
                 <div class="card-info">
-                    <div class="card-title">${escapeHtml(p.name)}</div>
+                    <div class="card-title" title="${escapeHtml(p.name)}">${escapeHtml(p.name)}</div>
                     <div class="card-sku">${p.sku}</div>
                     <div class="card-type">${p.type}</div>
                 </div>
                 <div class="card-buttons">
-                    <button class="btn-card btn-detail" data-id="${p.id}">查看详情</button>
-                    <button class="btn-card btn-inquiry">询价</button>
+                    <button class="btn-card btn-detail" data-id="${p.id}">${t.detail_btn || "View Details"}</button>
+                    <button class="btn-card btn-inquiry">${t.inquiry_btn || "Inquiry"}</button>
                 </div>
             </div>
-        `).join('');
-        document.querySelectorAll('.btn-detail').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                const id = btn.getAttribute('data-id');
-                const product = PRODUCTS_DATA.find(p => p.id === id);
-                if (product) showDetail(product);
-            });
-        });
-        document.querySelectorAll('.btn-inquiry').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                showInquiryModal();
-            });
-        });
-        document.querySelectorAll('.card-img').forEach(img => {
-            img.addEventListener('click', (e) => {
-                const card = img.closest('.product-card');
-                const id = card.getAttribute('data-id');
-                const product = PRODUCTS_DATA.find(p => p.id === id);
-                if (product) showDetail(product);
-            });
-        });
-    }
+        `,
+          )
+          .join("");
+        attachCardEvents();
 
-    function showDetail(product) {
+        if (totalPages <= 1) {
+          paginationContainer.innerHTML = "";
+          return;
+        }
+        let paginationHtml = "";
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `<button class="page-btn ${i === currentPage ? "active" : ""}" data-page="${i}">${i}</button>`;
+        }
+        paginationContainer.innerHTML = paginationHtml;
+        document.querySelectorAll(".page-btn").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const page = parseInt(btn.getAttribute("data-page"));
+            if (!isNaN(page) && page !== currentPage) {
+              currentPage = page;
+              renderHome();
+            }
+          });
+        });
+      }
+
+      function attachCardEvents() {
+        document.querySelectorAll(".btn-detail").forEach((btn) =>
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            const id = btn.getAttribute("data-id");
+            const p = PRODUCTS_DATA.find((p) => p.id === id);
+            if (p) showDetail(p, true);
+          }),
+        );
+        document.querySelectorAll(".btn-inquiry").forEach((btn) =>
+          btn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            openInquiryModal(null);
+          }),
+        );
+        document.querySelectorAll(".card-img").forEach((img) =>
+          img.addEventListener("click", (e) => {
+            const card = img.closest(".product-card");
+            const id = card.getAttribute("data-id");
+            const p = PRODUCTS_DATA.find((p) => p.id === id);
+            if (p) showDetail(p, true);
+          }),
+        );
+      }
+
+      function handleHash() {
+        const hash = location.hash.slice(1);
+        if (hash.startsWith("product/")) {
+          const id = hash.split("/")[1];
+          const p = PRODUCTS_DATA.find((p) => p.id === id);
+          if (p) {
+            showDetail(p, false);
+            return;
+          }
+        }
+        homeView.classList.remove("hidden");
+        detailView.classList.add("hidden");
+        renderHome();
+        window.scrollTo(0, 0);
+      }
+
+      function showDetail(product, pushHash = true) {
+        if (pushHash) location.hash = `product/${product.id}`;
         currentProduct = product;
         currentCarouselIndex = 0;
         updateDetailUI();
-        homeView.classList.add('hidden');
-        detailView.classList.remove('hidden');
+        homeView.classList.add("hidden");
+        detailView.classList.remove("hidden");
         window.scrollTo(0, 0);
-    }
+        if (quoteSku) quoteSku.value = product.sku;
+        renderRelated(product);
+        renderBottomGallery(product);
+        renderBottomVideo(product);
+      }
 
-    function updateDetailUI() {
-        detailProductName.innerHTML = `${escapeHtml(currentProduct.name)} ${currentProduct.heavyweight ? '<span style="background:#eef3ea; padding:0.1rem 0.6rem; border-radius:20px;">HeavyWeight</span>' : ''}`;
-        detailSku.innerText = currentProduct.sku + (currentProduct.modelCode ? ` | ${currentProduct.modelCode}` : '');
-        detailSpecList.innerHTML = `
-            <div class="spec-item"><span class="spec-label">产品类型</span><span>${escapeHtml(currentProduct.type)}</span></div>
-            <div class="spec-item"><span class="spec-label">材质</span><span>${escapeHtml(currentProduct.material)}</span></div>
-            <div class="spec-item"><span class="spec-label">颜色</span><span>${escapeHtml(currentProduct.color)}</span></div>
-            <div class="spec-item"><span class="spec-label">包装规格</span><span>1000个/箱</span></div>
-            <div class="spec-item"><span class="spec-label">适用场景</span><span>餐厅 / 学校 / 医院 / 食堂 / 面包店</span></div>
-        `;
-        detailDescList.innerHTML = (currentProduct.features || []).map(f => `<li><i class="fas fa-check-circle"></i> ${escapeHtml(f)}</li>`).join('');
+      function renderBottomGallery(product) {
+        const detailImages = product.detailImages || [];
+        if (!detailImages.length) {
+          bottomGallerySection.style.display = "none";
+          return;
+        }
+        bottomGallerySection.style.display = "block";
+        bottomGalleryList.innerHTML = detailImages
+          .map(
+            (src) => `
+            <div onclick="openImagePreview('${src}')" style="cursor:pointer;">
+                <img src="${src}" loading="lazy" alt="Detail image">
+            </div>
+        `,
+          )
+          .join("");
+      }
+
+      function renderBottomVideo(product) {
+        const videoUrl = product.videoUrl;
+        if (!videoUrl) {
+          bottomVideoContainer.style.display = "none";
+          return;
+        }
+        bottomVideoContainer.style.display = "block";
+        const poster = product.videoPoster ? product.videoPoster : "";
+        bottomVideoWrapper.innerHTML = `<video controls preload="metadata" poster="${poster}" style="width:100%;"><source src="${videoUrl}" type="video/mp4">Your browser does not support the video tag.</video>`;
+      }
+
+      function renderRelated(product) {
+        const same = PRODUCTS_DATA.filter(
+          (p) => p.type === product.type && p.id !== product.id,
+        ).slice(0, 4);
+        if (!same.length) {
+          relatedDiv.innerHTML = "";
+          return;
+        }
+        const t = translations[currentLang];
+        relatedDiv.innerHTML = `<div class="related-title">${t.related_title || "Related Products"}</div><div class="related-grid">${same
+          .map(
+            (p) => `
+            <div class="related-card" data-id="${p.id}">
+                <img src="${p.images[0]}" loading="lazy" onerror="this.src='https://placehold.co/200x100?text=Image'">
+                <p>${escapeHtml(p.name)}</p>
+                <small>${p.sku}</small>
+            </div>
+        `,
+          )
+          .join("")}</div>`;
+        document.querySelectorAll(".related-card").forEach((card) => {
+          card.addEventListener("click", () => {
+            const id = card.getAttribute("data-id");
+            const np = PRODUCTS_DATA.find((p) => p.id === id);
+            if (np) showDetail(np, true);
+          });
+        });
+      }
+
+      function updateDetailUI() {
+        detailProductName.innerText = currentProduct.name;
+        detailSku.innerText = currentProduct.sku;
+        const specDetails = currentProduct.specDetails || {};
+        const specItemsHtml = Object.entries(specDetails)
+          .map(
+            ([key, value]) => `
+            <div class="spec-item">
+                <i class="fas fa-tag"></i>
+                <span class="spec-label">${escapeHtml(key)}</span>
+                <span>${escapeHtml(value)}</span>
+            </div>
+        `,
+          )
+          .join("");
+        detailSpecList.innerHTML =
+          specItemsHtml || '<div class="spec-item">No specifications</div>';
+        detailDescList.innerHTML = (currentProduct.features || [])
+          .map(
+            (f) =>
+              `<li><i class="fas fa-check-circle"></i> ${escapeHtml(f)}</li>`,
+          )
+          .join("");
         const specs = currentProduct.specDetails || {};
-        detailSpecTable.innerHTML = Object.entries(specs).map(([k, v]) => `<span>${escapeHtml(k)}</span><span><strong>${escapeHtml(v)}</strong></span>`).join('');
-        renderCarouselImages();
-        buildThumbnails();
-    }
+        detailSpecTable.innerHTML = Object.entries(specs)
+          .map(
+            ([k, v]) =>
+              `<span>${escapeHtml(k)}</span><span><strong>${escapeHtml(v)}</strong></span>`,
+          )
+          .join("");
+        renderCarousel();
+        buildThumbs();
+      }
 
-    function renderCarouselImages() {
-        const images = currentProduct.images;
-        if (images && images.length) mainCarouselImg.src = images[currentCarouselIndex];
-    }
-
-    function buildThumbnails() {
-        detailThumbContainer.innerHTML = '';
+      function renderCarousel() {
+        if (currentProduct.images?.length)
+          mainCarouselImg.src = currentProduct.images[currentCarouselIndex];
+      }
+      function buildThumbs() {
+        detailThumbContainer.innerHTML = "";
         (currentProduct.images || []).forEach((src, idx) => {
-            const thumb = document.createElement('div');
-            thumb.className = `thumb-item ${idx === currentCarouselIndex ? 'active' : ''}`;
-            thumb.innerHTML = `<img src="${src}">`;
-            thumb.addEventListener('click', () => {
-                currentCarouselIndex = idx;
-                renderCarouselImages();
-                updateThumbnailActive();
-            });
-            detailThumbContainer.appendChild(thumb);
+          const div = document.createElement("div");
+          div.className = `thumb-item ${idx === currentCarouselIndex ? "active" : ""}`;
+          div.innerHTML = `<img src="${src}" loading="lazy">`;
+          div.addEventListener("click", () => {
+            currentCarouselIndex = idx;
+            renderCarousel();
+            updateActiveThumb();
+          });
+          detailThumbContainer.appendChild(div);
         });
-    }
-
-    function updateThumbnailActive() {
-        document.querySelectorAll('#detailThumbContainer .thumb-item').forEach((t, i) => {
-            if (i === currentCarouselIndex) t.classList.add('active');
-            else t.classList.remove('active');
-        });
-    }
-
-    function nextSlide() {
-        const imgs = currentProduct?.images;
-        if (imgs?.length) {
-            currentCarouselIndex = (currentCarouselIndex + 1) % imgs.length;
-            renderCarouselImages();
-            updateThumbnailActive();
+      }
+      function updateActiveThumb() {
+        document
+          .querySelectorAll("#detailThumbContainer .thumb-item")
+          .forEach((t, i) =>
+            i === currentCarouselIndex
+              ? t.classList.add("active")
+              : t.classList.remove("active"),
+          );
+      }
+      function nextSlide() {
+        if (currentProduct?.images?.length) {
+          currentCarouselIndex =
+            (currentCarouselIndex + 1) % currentProduct.images.length;
+          renderCarousel();
+          updateActiveThumb();
         }
-    }
-
-    function prevSlide() {
-        const imgs = currentProduct?.images;
-        if (imgs?.length) {
-            currentCarouselIndex = (currentCarouselIndex - 1 + imgs.length) % imgs.length;
-            renderCarouselImages();
-            updateThumbnailActive();
+      }
+      function prevSlide() {
+        if (currentProduct?.images?.length) {
+          currentCarouselIndex =
+            (currentCarouselIndex - 1 + currentProduct.images.length) %
+            currentProduct.images.length;
+          renderCarousel();
+          updateActiveThumb();
         }
-    }
-
-    function goToHome() {
-        homeView.classList.remove('hidden');
-        detailView.classList.add('hidden');
+      }
+      function goToHome() {
+        location.hash = "";
+        homeView.classList.remove("hidden");
+        detailView.classList.add("hidden");
         renderHome();
-        window.scrollTo(0, 0);
-    }
+      }
+      function openInquiryModal(sku) {
+        if (sku && quoteSku) quoteSku.value = sku;
+        modal.style.display = "flex";
+      }
+      function closeModal() {
+        modal.style.display = "none";
+      }
+      function openImagePreview(src) {
+        previewImage.src = src;
+        imagePreviewModal.style.display = "flex";
+      }
+      function closeImagePreview() {
+        imagePreviewModal.style.display = "none";
+      }
+      function initFaq() {
+        document.querySelectorAll(".faq-question").forEach((btn) =>
+          btn.addEventListener("click", () => {
+            btn.nextElementSibling.classList.toggle("show");
+            btn.querySelector("i").classList.toggle("rotate");
+          }),
+        );
+      }
+      function escapeHtml(str) {
+        if (!str) return "";
+        return str.replace(
+          /[&<>]/g,
+          (m) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[m],
+        );
+      }
 
-    function showInquiryModal() {
-        modalContactInfo.innerHTML = `
-            <div class="contact-info-item"><span><i class="fab fa-whatsapp"></i> WhatsApp</span><span>${CONTACT_INFO.whatsapp}</span><button class="copy-btn" data-copy="${CONTACT_INFO.whatsapp}">复制</button></div>
-            <div class="contact-info-item"><span><i class="far fa-envelope"></i> 邮箱</span><span>${CONTACT_INFO.email}</span><button class="copy-btn" data-copy="${CONTACT_INFO.email}">复制</button></div>
-        `;
-        modal.style.display = 'flex';
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                navigator.clipboard.writeText(btn.getAttribute('data-copy'));
-                btn.innerHTML = '已复制';
-                setTimeout(() => btn.innerHTML = '复制', 1000);
-            });
+      // 事件绑定
+      backHomeBtn.addEventListener("click", goToHome);
+      prevBtn.addEventListener("click", prevSlide);
+      nextBtn.addEventListener("click", nextSlide);
+      detailInquiryBtn.addEventListener("click", () =>
+        openInquiryModal(currentProduct?.sku),
+      );
+      modalClose.addEventListener("click", closeModal);
+      window.addEventListener("click", (e) => {
+        if (e.target === modal) closeModal();
+      });
+      searchInput.addEventListener("input", (e) => {
+        searchKeyword = e.target.value;
+        currentPage = 1;
+        renderHome();
+      });
+      emailFab.addEventListener("click", () => {
+        window.location.href = `mailto:${CONTACT.email}`;
+      });
+      langSelect.addEventListener("change", (e) => {
+        setLanguage(e.target.value);
+      });
+      imagePreviewModal.addEventListener("click", closeImagePreview);
+      document.querySelectorAll("#detailView .tab-btn").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const tab = btn.getAttribute("data-tab");
+          document
+            .querySelectorAll("#detailView .tab-btn")
+            .forEach((b) => b.classList.remove("active"));
+          btn.classList.add("active");
+          document
+            .getElementById("detailDescTab")
+            .classList.toggle("active", tab === "desc");
+          document
+            .getElementById("detailDetailsTab")
+            .classList.toggle("active", tab === "details");
         });
-    }
+      });
 
-    function closeModal() { modal.style.display = 'none'; }
-
-    function escapeHtml(str) { if (!str) return ''; return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
-
-    // 初始化 Tabs 切换
-    function initDetailTabs() {
-        document.querySelectorAll('#detailView .tab-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const tab = btn.getAttribute('data-tab');
-                document.querySelectorAll('#detailView .tab-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
-                const descTab = document.getElementById('detailDescTab');
-                const detailsTab = document.getElementById('detailDetailsTab');
-                if (tab === 'desc') { descTab.classList.add('active'); detailsTab.classList.remove('active'); }
-                else { descTab.classList.remove('active'); detailsTab.classList.add('active'); }
-            });
-        });
-    }
-
-    // 绑定事件
-    backHomeBtn.addEventListener('click', goToHome);
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
-    detailInquiryBtn.addEventListener('click', showInquiryModal);
-    modalClose.addEventListener('click', closeModal);
-    window.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
-    searchInput.addEventListener('input', (e) => { searchKeyword = e.target.value; renderHome(); });
-    initDetailTabs();
-
-    // 启动
-    loadData();
-</script>
-</body>
+      loadData();
+    </script>
+  </body>
 </html>

@@ -1,81 +1,98 @@
 [
   {
-    "id": "spoon_heavy",
-    "name": "5555不锈钢",
-    "type": "茶匙",
-    "sku": "CSIHWPPTEASPWH",
-    "modelCode": "CSIHWPPTEASPWHRZ1",
-    "color": "白色",
-    "material": "聚丙烯 (Polypropylene) 食品级 · 重型加厚",
+    "id": "SKU00080_1780111262285",
+    "name": "60pcs Silverware Set for 12pcs, Heavy Duty Stainless Steel Cutlery Cutlery Set Including Steak Knife Fork and Spoon, Dishwasher Washable, Wedding Relocation Gift Package",
+    "type": "Cutlery",
+    "sku": "SKU00080",
+    "color": "Silver",
+    "material": "Stainless steel",
     "heavyweight": true,
     "images": [
-      "https://images.pexels.com/photos/4109730/pexels-photo-4109730.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop",
-      "https://images.pexels.com/photos/1279330/pexels-photo-1279330.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop",
-      "https://images.pexels.com/photos/4109735/pexels-photo-4109735.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop"
+      "image/SKU00080Image_8.jpg",
+      "image/SKU00080Image_24.jpg",
+      "image/SKU00080Image_3.jpg",
+      "image/SKU00080Image_6.jpg"
+    ],
+    "detailImages": [
+      "image/SKU00080Image_7.jpg",
+      "image/SKU00080Image_13.jpg",
+      "image/SKU00080Image_27.jpg",
+      "image/SKU00080Image_28.jpg",
+      "image/SKU00080Image_32.jpg"
     ],
     "features": [
-      "非常适合随手携带，轻量耐用，适用于快节奏餐饮环境。",
-      "光滑的白色聚丙烯材质呈现出经典外观，易搭配桌布或托盘。",
-      "适用于餐厅、学校、医院、食堂或面包店，重型设计抗弯曲。",
-      "聚丙烯材质，耐高温洗碗机清洗，可重复使用，环保节约成本。",
-      "每箱1000个，超值商用装，降低高频更换成本。",
-      "次日送达服务覆盖奥尔巴尼地区，物流快捷高效。"
+      "60-piece set: 60-piece stainless steel silverware set includes 12: dinner knife, dinner fork, salad fork, dinner spoon and teaspoon, beautifully packaged in a gift box.",
+      "High quality material: Silverware set 60 pieces solid made of high quality high quality stainless steel, not easy to rust, nickel free, suitable for daily use, easy to clean, dishwasher washable. Rugged construction ensures everyday use and durability without worrying about bending.",
+      "Dishwasher safe: This stainless steel spoon and fork set (fork, spoon and cutlery set stainless steel, cutlery set) is suitable for everyday use, dishwasher safe and very convenient. This modern silverware set will not lose its mirrored sheen even after repeated use and washing",
+      "Ergonomic design: The elegant cutlery set provides the ultimate dining experience as everyday spoon silverware stays comfortably in hand and weighs only as much as the stainless steel cutlery set needs. Modern design, square edges, simple classic cutlery mixed with many cutlery, decent cutlery sets enhance the dining experience.",
+      "Versatile: The sturdy 12-piece silverware set is perfect for families, restaurants, hotels, weddings, trips, camping, parties, dining, and is a great gift for family and friends."
     ],
     "specDetails": {
-      "品牌": "Chef's Supply (餐饮专业线)",
-      "产品名称": "重型聚丙烯茶匙",
-      "材质证书": "食品级PP，不含BPA，耐温 -20°C至100°C",
-      "单支重量": "约8.5g (加厚重型)",
-      "尺寸": "全长14.2cm · 勺头宽3.4cm",
-      "颜色选项": "白色(主推) / 黑色(暂缺)",
-      "包装方式": "1000个/箱，散装或独立包装可选",
-      "认证": "FDA, LFGB 食品接触认证"
+      "Components Included": "12 Dinner Knives, 12 Dinner Forks, 12 Dinner Spoons, 12 Salad Forks, 12 Teaspoons, 1 Fine Gift Box",
+      "Decoration type": "polishing",
+      "Special Functions": "Dishwasher safe, heavy duty, rust resistant",
+      "Number of units": "60",
+      "Product Care Instructions": "Dishwasher safety",
+      "Whether the product is stain-resistant": "Yes",
+      "Are items dishwasher safe?": "Yes",
+      "Products Style": "Modern",
+      "Material": "Stainless steel",
+      "Color": "Silver"
     }
   },
   {
-    "id": "fork_heavy",
-    "name": "重型餐叉",
-    "type": "叉子",
-    "sku": "CSIHWPPFORKWH",
-    "modelCode": "CSIHWPPFORKWHBX1",
-    "color": "白色",
-    "material": "聚丙烯 (Polypropylene) 加厚型",
-    "heavyweight": true,
-    "images": [
-      "https://images.pexels.com/photos/4109721/pexels-photo-4109721.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop",
-      "https://images.pexels.com/photos/4109678/pexels-photo-4109678.jpeg?auto=compress&cs=tinysrgb&w=800&h=800&fit=crop"
-    ],
-    "features": [
-      "一体成型加厚叉齿，不易变形。",
-      "防滑手柄，适合各类餐饮环境。",
-      "耐高温洗碗机清洗，反复使用卫生安全。"
-    ],
-    "specDetails": {
-      "品牌": "Chef's Supply",
-      "产品名称": "重型聚丙烯餐叉",
-      "材质": "食品级PP，不含BPA",
-      "单支重量": "约9g",
-      "尺寸": "全长15cm",
-      "包装": "1000个/箱"
-    }
-  },
-  {
-    "id": "888666_1780027685256",
-    "name": "测试第一条数据",
-    "type": "汤匙",
-    "sku": "888666",
-    "modelCode": "33333",
-    "color": "蓝色",
-    "material": "fdf",
+    "id": "SKU00081_1780116095270",
+    "name": "Silicone Cookware Kitchen Utensils Set °C °C Heat Resistant Silicone Kitchen Utensils Set Spatula, Shovel, Spoon, Egg Beater, Kitchen Gadgets For Non-Stick Cookware, BPA Free (Gray)",
+    "type": "Cooking utensils",
+    "sku": "SKU00081",
+    "color": "GREY",
+    "material": "Silicone wood",
     "heavyweight": false,
     "images": [
-      "https://img.wbmason.com/240/m_csihwppforkwh_cs_p.jpg?v=95199e2a-a4c1-43ff-aaca-db7a34b11b14"
+      "image/SKU00081 (26).jpg",
+      "image/SKU00081 (5).jpg",
+      "image/SKU00081 (16).jpg",
+      "image/SKU00081 (17).jpg",
+      "image/SKU00081 (18).jpg"
     ],
-    "features": ["haokan11"],
+    "detailImages": [
+      "image/SKU00081 (1).jpg",
+      "image/SKU00081 (3).jpg",
+      "image/SKU00081 (4).jpg",
+      "image/SKU00081 (6).jpg",
+      "image/SKU00081 (7).jpg",
+      "image/SKU00081 (8).jpg",
+      "image/SKU00081 (9).jpg",
+      "image/SKU00081 (10).jpg",
+      "image/SKU00081 (11).jpg",
+      "image/SKU00081 (12).jpg",
+      "image/SKU00081 (13).jpg",
+      "image/SKU00081 (14).jpg",
+      "image/SKU00081 (15).jpg",
+      "image/SKU00081 (19).jpg",
+      "image/SKU00081 (20).jpg",
+      "image/SKU00081 (21).jpg",
+      "image/SKU00081 (22).jpg"
+    ],
+    "features": [
+      "Heat-resistant and durable: The Oannao Silicone Kitchenware Set features upgraded thickened silicone for enhanced durability and resilience for a smoother cooking experience. Withstands 446°F (230°C) up to 230°C without melting or deformation, even with frequent use. Soft and thick pot head prevents scratches on kitchen utensils and is suitable for non-stick pots and daily high-temperature cooking",
+      "Food Grade BPA Free: This silicone cutlery set is made of high quality food grade silicone, free of BPA, odor free and non-responsive to food. Effective resistance to stains and odors: Oannao cutlery stays fresh and clean even when highly flavored ingredients such as garlic, onions, spices or tomatoes are reused - no residual odors or color residues affect future use",
+      "Versatile tools: This silicone scraper set includes essential tools: scraper, spoon, spatula, slotted spoon, spatula, etc. Designed to handle everyday cooking and baking tasks - stirring sauces, soups, flipping pancakes, mixing batter - making it a reliable helper for home cooks and beginners, a must-have tool for a new home or apartment",
+      "Sturdy and easy to clean: The silicone kitchenware set has a stainless steel core and is durable. Seamless silicone wrapping prevents food buildup and ensures quick hand washing. Heat-resistant handles with holes keep your kitchen organized, save storage space and reduce clutter",
+      "Cutlery is a must-have in the kitchen: This silicone kitchen set is stylish and practical, perfect for modern and classic kitchen styles. Suitable for everyday use or as a thoughtful gift (wedding, relocation celebration, birthday) to add convenience and efficiency to daily cooking."
+    ],
     "specDetails": {
-      "22": "1222",
-      "333": "4444",
-      "555": "5555"
+      "Material": "Silicone wood",
+      "Color": "Grey Multicolor Black Milk White Pink",
+      "size": "Large",
+      "Dimensions": "35.6 L x 10.9 W cm",
+      "Suggested Use": "Serve, Mix, Cook",
+      "Product type name.": "silicone cooking utensils; cooking utensils",
+      "Product Composition Information": "circular spatula; spatula; large skimming spoon, slotted spoon/filter; slotted spatula, spaghetti server, flexible spatula, stirring brush, scraper, deep spoon; solid service spoon; bracket; pliers",
+      "Are items dishwasher safe?": "W/O",
+      "Handle Material": "Yes",
+      "No material type": "BPA-free",
+      "Weight of Product": "2.6 lbs"
     }
   }
 ]
